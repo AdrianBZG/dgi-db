@@ -22,11 +22,8 @@ module Genome
       end
 
       def self.cleanup_type(type)
-        interaction_claims_with_more_than_one_type = type.interaction_claims
-          .reject { |ic| ic.interaction_claim_types.size == 1 }
-        interaction_claims_with_more_than_one_type.each do |ic|
+        type.interaction_claims.each do |ic|
           ic.interaction_claim_types.delete(type)
-          ic.save
         end
       end
 
@@ -40,11 +37,11 @@ module Genome
       end
 
       def self.default_type
-        DataModel::InteractionClaimType.where(type: 'n/a').first
+        DataModel::InteractionClaimType.find_by(type: 'n/a')
       end
 
       def self.other_type
-        DataModel::InteractionClaimType.where(type: 'other/unknown').first
+        DataModel::InteractionClaimType.find_by(type: 'other/unknown')
       end
 
       def self.add_unless_exists(type, interaction_claim)

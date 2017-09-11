@@ -317,6 +317,7 @@ DEPENDENCIES
   exception_notification
   fabrication
   haml
+  highline
   jbuilder
   jquery-rails
   launchy
