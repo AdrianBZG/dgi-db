@@ -14,11 +14,12 @@ describe Genome::Groupers::DrugGrouper do
     source = Fabricate(:source, source_db_name: 'Test Source')
     drug_claims << Fabricate(:drug_claim, name: 'Test Drug', source: source, primary_name: 'Test Drug')
     drug_claims << Fabricate(:drug_claim, name: 'TEST DRUG', source: source, primary_name: 'TEST DRUG')
+    drug_claims << Fabricate(:drug_claim, name: 'Test!-drug', source: source, primary_name: 'Test!-drug')
 
     group
     drug_claims.each { |dc| dc.reload; expect(dc.drug).not_to be_nil }
-    expect(drug.drug_claims.count).to eq 2
-    expect(drug.drug_aliases.count).to eq 0
+    expect(drug.drug_claims.count).to eq 3
+    expect(drug.drug_aliases.count).to eq 1
     expect(drug.drug_attributes.count).to eq 0
   end
 
@@ -29,12 +30,15 @@ describe Genome::Groupers::DrugGrouper do
     drug_claim = Fabricate(:drug_claim, name: 'Nonmatching Drug Name', source: source, primary_name: nil)
     Fabricate(:drug_claim_alias, alias: name, drug_claim: drug_claim)
     Fabricate(:drug_claim_attribute, drug_claim: drug_claim, name: 'adverse reaction', value: 'true')
+    another_drug_claim = Fabricate(:drug_claim, name: 'Another Nonmatching Drug Name', source: source, primary_name: nil)
+    Fabricate(:drug_claim_alias, alias: 'test-drug!', drug_claim: another_drug_claim)
+    Fabricate(:drug_claim_attribute, drug_claim: another_drug_claim, name: 'adverse reaction', value: 'true')
 
     group
     drug_claim.reload
     expect(drug_claim.drug).not_to be_nil
-    expect(drug.drug_claims.count).to eq 1
-    expect(drug.drug_aliases.count).to eq 1
+    expect(drug.drug_claims.count).to eq 2
+    expect(drug.drug_aliases.count).to eq 3
     expect(drug.drug_attributes.count).to eq 1
   end
 
@@ -304,6 +308,20 @@ describe Genome::Groupers::DrugGrouper do
     expect(drug.chembl_id).to eq bond
 
     expect{Fabricate(:drug, molecule: molecule)}.to raise_error
+  end
+
+  it 'should blacklist and remove common aliases' do
+    drug_claims = Fabricate.times(4, :drug_claim).each do |dc|
+      Fabricate(:drug, name: dc.name)
+      Fabricate(:drug_claim_alias, alias: 'beans', drug_claim: dc)
+      Fabricate(:drug_claim_alias, drug_claim: dc)
+    end
+    group
+    drug_claims.each do |dc|
+      dc.reload
+      expect(dc.drug).to_not be_nil
+      expect(dc.drug_claim_aliases.count).to eq 1
+    end
   end
 
 end

@@ -65,14 +65,14 @@
           %li
             %a{href: '#shell-sample'}Shell
           %li.divider
-    .span9{style: "float: left; width: 700px; margin-left: 20px; display: block;"}
+    .span9{style: "float: left; width: 70%; margin-left: 20px; display: block;"}
       %h2 Introduction
       %p
         The DGIdb API can be used to query for drug-gene interactions in your own applications
         through a simple JSON based interface.
       %p
         All endpoints can be reached at:
-        %code http://dgidb.genome.wustl.edu
+        %code http://dgidb.org
       %p
         Documentation for v1 of the API (deprecated) can be found
         =link_to 'here.', 'api_v1'
@@ -81,9 +81,9 @@
           %h2
             Endpoints
             %small available API method calls
-      %section#interactions
+      %section#interactions.anchor
         %h3 Interactions
-      %section#search-interactions
+      %section#search-interactions.anchor
         %h4 Search Interactions
         %p.lead
           The interactions endpoint can be used to return
@@ -158,7 +158,7 @@
                 anti_neoplastic
                 %small (optional)
               %td
-                A flag denoting whether or not to limit interactions to only the ones involving anti-neoplastic drugs.
+                A flag denoting whether or not to limit interactions to only the ones involving antineoplastic drugs.
                 If this field is omitted, interactions for all types of drugs will be included.
               %td
                 %code anti_neoplastic=true
@@ -217,7 +217,7 @@
             by the source.
             =link_to('TALC', source_path('TALC')) + '.'
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=FLT1,MM1,FAKE&amp;nteraction_sources=TALC
+          \http://dgidb.org/api/v2/interactions.json?genes=FLT1,MM1,FAKE&amp;nteraction_sources=TALC
         %h5 Example Response:
         %p
           The response will come back with three top level items:
@@ -470,13 +470,13 @@
                 "FAKE"
               ]
       %hr
-      %section#all-interactions
+      %section#all-interactions.anchor
         %h4 All Interactions
         %p.lead
           When used without any parameters, the interactions endpoint returns a list of all interactions in the DGIdb database.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/interactions.json
+          \http://dgidb.org/api/v2/interactions.json
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-all-interactions-response'}}
           Show/Hide Response
         %pre#example-all-interactions-response.collapse
@@ -501,13 +501,13 @@
               ...
             ]
       %hr
-      %section#one-interaction
+      %section#one-interaction.anchor
         %h4 Interaction Details
         %p.lead
           The interaction details endpoint can be used to retrieve detailed information about one particular interaction.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/interactions/&#60;interaction_id&#62;
+          \http://dgidb.org/api/v2/interactions/&#60;interaction_id&#62;
         %h5
           Example Call:
         %p
@@ -517,7 +517,7 @@
             ID
             %code d7f26f83-681f-4546-a71e-4651c8c88c7c
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/interactions/d7f26f83-681f-4546-a71e-4651c8c88c7c
+          \http://dgidb.org/api/v2/interactions/d7f26f83-681f-4546-a71e-4651c8c88c7c
         %h5
           Example Response:
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-one-interaction-response'}}
@@ -624,13 +624,15 @@
               }
             ]
       %hr
-      %section#all-drugs
-        %h3 All Drugs
+      %section#drugs.anchor
+        %h3 Drugs
+      %section#all-drugs.anchor
+        %h4 All Drugs
         %p.lead
           The drugs endpoint can be used to retrieve a list of all drugs in the DGIdb database.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/drugs.json
+          \http://dgidb.org/api/v2/drugs.json
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-all-drugs-response'}}
           Show/Hide Response
         %pre#example-all-drugs-response.collapse
@@ -656,13 +658,13 @@
               ...
             ]
       %hr
-      %section#one-drug
+      %section#one-drug.anchor
         %h4 Drug Details
         %p.lead
           The drug details endpoint can be used to retrieve detailed information about one particular drug.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/drugs/&#60;chembl_id&#62;
+          \http://dgidb.org/api/v2/drugs/&#60;chembl_id&#62;
         %h5
           Example Call:
         %p
@@ -672,7 +674,7 @@
             ChEMBL ID
             %code CHEMBL1237026
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/drugs/CHEMBL1237026
+          \http://dgidb.org/api/v2/drugs/CHEMBL1237026
         %h5
           Example Response:
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-one-drug-response'}}
@@ -1076,13 +1078,15 @@
               ]
             }
       %hr
-      %section#all-genes
-        %h3 All Genes
+      %section#genes.anchor
+        %h3 Genes
+      %section#all-genes.anchor
+        %h4 All Genes
         %p.lead
           The genes endpoint can be used to retrieve a list of all genes in the DGIdb database.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/genes.json
+          \http://dgidb.org/api/v2/genes.json
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-all-genes-response'}}
           Show/Hide Response
         %pre#example-all-genes-response.collapse
@@ -1103,13 +1107,13 @@
               ...
             ]
       %hr
-      %section#one-gene
+      %section#one-gene.anchor
         %h4 Gene Details
         %p.lead
           The gene details endpoint can be used to retrieve detailed information about one particular gene.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/genes/&#60;entrez_id&#62;
+          \http://dgidb.org/api/v2/genes/&#60;entrez_id&#62;
         %h5
           Example Call:
         %p
@@ -1119,7 +1123,7 @@
             Entrez ID
             %code 346
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/genes/346
+          \http://dgidb.org/api/v2/genes/346
         %h5
           Example Response:
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-one-gene-response'}}
@@ -1236,56 +1240,56 @@
               ]
             }
       %hr
-      %section#interaction-types
+      %section#interaction-types.anchor
         %h3 Interaction Types
         %p.lead
           The interaction types endpoint can be used to retrieve a current list of supported
           interaction types for use in the interactions endpoint.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/interaction_types.json
+          \http://dgidb.org/api/v2/interaction_types.json
         %h5 Example Response:
         %pre
           ["activator", "inhibitor", "unknown"]
       %hr
-      %section#interaction-sources
+      %section#interaction-sources.anchor
         %h3 Interaction Sources
         %p.lead
           The interaction sources endpoint can be used to retrieve a current list of supported
           interaction sources for use in calls to the interactions endpoint.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/interaction_sources.json
+          \http://dgidb.org/api/v2/interaction_sources.json
         %h5 Example Response:
         %pre
           ["DrugBank","PharmGKB","TALC","TEND","TTD"]
       %hr
-      %section#gene-categories
+      %section#gene-categories.anchor
         %h3 Gene Categories
         %p.lead
           The gene categories endpoint can be used to retrieve a current list of supported
           gene categories for use in calls to the interactions endpoint.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/gene_categories.json
+          \http://dgidb.org/api/v2/gene_categories.json
         %h5 Example Response:
         %pre
           ["KINASE", "DNA REPAIR", "TUMOR SUPPRESSOR"]
       %hr
-      %section#source-trust-levels
+      %section#source-trust-levels.anchor
         %h3 Source Trust Levels
         %p.lead
           The source trust levels endpoint can be used to retrieve a current list of supported
           source trust levels for use in calls to the interactions endpoint.
         %span.label GET
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/source_trust_levels.json
+          \http://dgidb.org/api/v2/source_trust_levels.json
         %h5 Example Response:
         %pre
           ["Expert curated", "Non-curated"]
       %hr
       /
-        %section#related-genes
+        %section#related-genes.anchor
           %h3 Related Genes
           %p.lead
             The related genes endpoint can be used to return Entrez gene symbols for other
@@ -1316,7 +1320,7 @@
               The following example would query DGIdb for a list of genes known to interact with
               FLT1 or FLT3
           %pre
-            \http://dgidb.genome.wustl.edu/api/v2/related_genes.json?genes=FLT1,FLT3
+            \http://dgidb.org/api/v2/related_genes.json?genes=FLT1,FLT3
           %h5 Example Response:
           %p
             The response will come back containing a list of hashes each with two keys:
@@ -1387,7 +1391,7 @@
                 ]
               }
         %hr
-      %section#genes-in-category
+      %section#genes-in-category.anchor
         %h3 Genes in Category
         %p.lead
           The Genes in Category endpoint can be used to get a list of all genes in DGIdb
@@ -1417,7 +1421,7 @@
           %small
             The following example would query DGIdb for a list of genes known to be Kinases
         %pre
-          \http://dgidb.genome.wustl.edu/api/v2/genes_in_category.json?category=kinase
+          \http://dgidb.org/api/v2/genes_in_category.json?category=kinase
         %h5 Example Response:
         %button.btn.btn-mini.btn-link{data: { toggle: 'collapse', target: '#example-genes-in-category-response'}}
           Show/Hide Response
@@ -1430,13 +1434,13 @@
           %h2
             Responses
             %small response information
-      %section#formats
+      %section#formats.anchor
         %h3 Formats
         %p
           Currently, all API responses are provided only in JSON. If you are experimenting with the API in your browser and you want to improve the display for JSON output you use a JSON formatter such as
           =link_to 'this one.', 'http://jsonformatter.curiousconcept.com/'
       %hr
-      %section#status-codes
+      %section#status-codes.anchor
         %h3 Status Codes
         %p
           The DGIdb API can respond to requests with a number of status codes.
@@ -1482,7 +1486,7 @@
           %h2
             Sample Code
             %small get started using DGIdb in the language of your choice
-      %section#perl-sample
+      %section#perl-sample.anchor
         %h3= link_to 'Perl', 'https://github.com/genome/dgi-db/blob/master/files/perl_example.pl'
         %p
           A sample Perl application that interacts with DGIdb can be found
@@ -1504,7 +1508,7 @@
           %pre
             get JSON<br>make JSON<br>install JSON<br>q
       %hr
-      %section#python-sample
+      %section#python-sample.anchor
         %h3= link_to 'Python', 'https://github.com/genome/dgi-db/blob/master/files/python_example.py'
         %p
           A sample Python application that interacts with DGIdb can be found
@@ -1515,7 +1519,7 @@
             wget https://raw.github.com/genome/dgi-db/master/files/python_example.py<br>chmod +x python_example.py<br>./python_example.py --genes='FLT3,EGFR' --interaction_types='inhibitor'
           %span.label INSTALL INSTRUCTIONS<br>
           %p
-            This example uses the 'requests' python library. Installing 'requests' is easiest with 'pip' which is one of the easiest and recommended ways to install Pyton packages.:
+            This example uses the 'requests' python library. Installing 'requests' is easiest with 'pip' which is one of the easiest and recommended ways to install Python packages.:
             %pre
               sudo pip install requests
             If you don't have pip, see
@@ -1523,7 +1527,7 @@
             <br>or you can do this,
             %pre
               wget https://raw.github.com/pypa/pip/master/contrib/get-pip.py<br>sudo python get-pip.py
-      %section#ruby-sample
+      %section#ruby-sample.anchor
         %h3= link_to 'Ruby', 'https://github.com/genome/dgi-db/blob/master/files/ruby_example.rb'
         %p
           A small Ruby client library, along with a short usage demo can be found
@@ -1536,7 +1540,7 @@
           %pre
             wget https://raw.github.com/genome/dgi-db/master/files/ruby_example.rb<br>ruby ruby_example.rb
       %hr
-      %section#shell-sample
+      %section#shell-sample.anchor
         %h3= link_to 'Shell', 'https://github.com/genome/dgi-db/blob/master/files/shell_example.sh'
         %p
           A small tutorial showing command-line usage of the DGIdb API using shell commands
@@ -1544,7 +1548,7 @@
           <br><br>Try the following examples from the command line to view and format output from the API:<br>
           %span.label SAMPLE CODE
           %pre
-            curl http://dgidb.genome.wustl.edu/api/v2/interactions.json<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=FLT3<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=FLT3 | python -mjson.tool<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=FLT3,STK1,FAKE1 | python -mjson.tool<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=STK1,FAKE1 | python -mjson.tool<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=STK1,FAKE1 | python -mjson.tool<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=FLT3,STK1,FAKE1&amp;interaction_sources=TTD,DrugBank | python -mjson.tool<br><br>curl http://dgidb.genome.wustl.edu/api/v2/interactions.json?genes=FLT3,STK1,FAKE1&amp;interaction_sources=TTD,DrugBank&amp;interaction_type=inhibitor | python -mjson.tool<br>
+            curl http://dgidb.org/api/v2/interactions.json<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=FLT3<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=FLT3 | python -mjson.tool<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=FLT3,STK1,FAKE1 | python -mjson.tool<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=STK1,FAKE1 | python -mjson.tool<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=STK1,FAKE1 | python -mjson.tool<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=FLT3,STK1,FAKE1&amp;interaction_sources=TTD,DrugBank | python -mjson.tool<br><br>curl http://dgidb.org/api/v2/interactions.json?genes=FLT3,STK1,FAKE1&amp;interaction_sources=TTD,DrugBank&amp;interaction_type=inhibitor | python -mjson.tool<br>
       %hr
 
   :css
@@ -1605,6 +1609,12 @@
     li {
       display: list-item;
       text-align: -webkit-match-parent;
+    }
+    .anchor::before {
+      content:"";
+      display:block;
+      height:5px; /* fixed header height*/
+      margin:-5px 0 0; /* negative fixed header height */
     }
 
   :javascript

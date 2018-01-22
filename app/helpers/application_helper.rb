@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include ActionView::Helpers::TagHelper
+  include ActionView::Context   
   def tx( fragment_id, action = params['action'] )
     action_hash = Maybe(EXTERNAL_STRINGS[action])
     if !action_hash[fragment_id].nil?
@@ -44,6 +46,12 @@ module ApplicationHelper
     dynamic_link_to(title, link)
   end
 
+  def pubmed_link_blue(pmid)
+    type = 'primary'
+    link = "http://www.ncbi.nlm.nih.gov/pubmed/" + pmid.to_s
+    link_to(label(pmid, type), link)
+  end
+
   def gene_claim_path(gene_claim)
     "/gene_claims/#{gene_claim.source.source_db_name}/#{gene_claim.name}"
   end
@@ -58,6 +66,14 @@ module ApplicationHelper
 
   def download_link(filename)
     link_to("/downloads/#{filename}")
+  end
+
+  def flag_help(flags)
+    content_tag :span do
+      flags.collect do |text, type|
+        content_tag(:span, text, class: ['label', 'label-' + type, "flag_icon"])
+      end.join.html_safe
+    end
   end
 
 end

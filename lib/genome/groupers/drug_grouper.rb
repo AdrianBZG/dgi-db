@@ -2,18 +2,24 @@ module Genome
   module Groupers
     class DrugGrouper
 
+      def initialize(drug_claim_relation = DataModel::DrugClaim)
+        @drug_claim_relation = drug_claim_relation
+      end
+
       def alias_failures
         @alias_failures ||= []
       end
 
       def run
         begin
-          newly_added_claims_count = 0
-          drug_claims_not_in_groups.in_groups_of(1000, false) do |claims|
-            grouped_claims = add_members(claims)
-            newly_added_claims_count += grouped_claims.length
-          end
-        end until newly_added_claims_count == 0
+          grouped_claims = add_members(drug_claims_not_in_groups)
+          Utils::Database.destroy_common_aliases
+        end until grouped_claims.length == 0
+      end
+
+
+      def alias_blacklist
+        @alias_blacklist ||= DataModel::DrugAliasBlacklist.all.to_a
       end
 
       def add_members(claims)
@@ -82,11 +88,46 @@ module Genome
         #   - against claim aliases
 
         if (drug_ids = DataModel::DrugAlias.where('upper(alias) in (?)', drug_claim.names).pluck(:drug_id).to_set).one?
-          drug = DataModel::Drug.where(id: drug_ids.first).first
+          drug = DataModel::Drug.find(drug_ids.first)
           add_drug_claim_to_drug(drug_claim, drug)
           return drug_claim
         elsif drug_ids.many?
           indirect_multimatch << drug_claim
+          return nil
+        end
+
+        # attempt to morph name to match
+        if (molecules = DataModel::ChemblMolecule.where('clean(pref_name) in (?)', drug_claim.cleaned_names)).one?
+          drug = create_drug_from_molecule(molecules.first)
+          add_drug_claim_to_drug(drug_claim, drug)
+          return drug_claim
+        elsif molecules.many? and (molecules.pluck(:pref_name).map(&:upcase).to_set).one?
+          new_drugs = []
+          molecules.each do |molecule|
+            next unless molecule.drug.nil? and rspec_nil? (molecule) # TODO: rspec_nil? is a hack for rspec / Fabricate.
+            drug = create_drug_from_molecule(molecule)
+            new_drugs << drug
+          end
+          if new_drugs.any?
+            return drug_claim
+          end
+        elsif molecules.many?
+          fuzzy_multimatch << drug_claim
+          return nil
+        elsif (molecule_ids = DataModel::ChemblMoleculeSynonym.where('clean(synonym) in (?)', drug_claim.cleaned_names).pluck(:chembl_molecule_id).to_set).one?
+          molecule = DataModel::ChemblMolecule.where(id: molecule_ids.first).first
+          drug = create_drug_from_molecule(molecule)
+          add_drug_claim_to_drug(drug_claim, drug)
+          return drug_claim
+        elsif molecule_ids.many?
+          fuzzy_multimatch << drug_claim
+          return nil
+        elsif (drug_ids = DataModel::DrugAlias.where('clean(alias) in (?)', drug_claim.cleaned_names).pluck(:drug_id).to_set).one?
+          drug = DataModel::Drug.find(drug_ids.first)
+          add_drug_claim_to_drug(drug_claim, drug)
+          return drug_claim
+        elsif drug_ids.many?
+          fuzzy_multimatch << drug_claim
           return nil
         end
 
@@ -104,13 +145,19 @@ module Genome
         @indirect_multimatch ||= Set.new
       end
 
+      def fuzzy_multimatch
+        @fuzzy_multimatch ||= Set.new
+      end
+
       def drug_claims_not_in_groups
-        DataModel::DrugClaim.where(drug_id: nil).to_a.keep_if do |drug_claim|
-          !(
-            (direct_multimatch.member? drug_claim) ||
-            (molecule_multimatch.member? drug_claim) ||
-            (indirect_multimatch.member? drug_claim)
-          )
+        multimatch_claims = direct_multimatch + molecule_multimatch + indirect_multimatch + fuzzy_multimatch
+        relation = @drug_claim_relation
+                       .where(drug_id: nil)
+                       .includes(:drug_claim_aliases, :source, :drug_claim_attributes)
+        if multimatch_claims.any?
+          relation.where('id not in (?)', multimatch_claims.pluck(:id))
+        else
+          relation
         end
       end
 

@@ -6,6 +6,9 @@ class PostGrouper
     end
     update_counts
     update_trust_levels
+    update_drug_types
+    backfill_publications
+    Rails.cache.clear
   end
 
   def delete_orphaned_gene_claims
@@ -26,4 +29,7 @@ class PostGrouper
     Genome::Normalizers::DrugTypeNormalizer.normalize_types
   end
 
+  def backfill_publications
+    Genome::Normalizers::Publications.populate_interaction_claims
+  end
 end

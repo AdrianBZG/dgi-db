@@ -8,7 +8,7 @@
     %h3(class="item-source")
       %span
         = "Search Term: " + "\"" + term + "\""
-      %i{class: "fa fa-play", "aria-hidden" => "true", style: "margin-left: 10px; margin-right: -8px"}
+      %span{class: "glyphicon glyphicon-play", "aria-hidden" => "true", style: "margin-left: 10px; margin-right: -8px"}
       &nbsp
       - if @search_mode == "genes"
         %a{href: "/genes/#{entity.name}#_interactions"}
@@ -21,7 +21,7 @@
   %div(class="cell category")
     %div{class: "item-panel"}
       %h4{style: "display: inline-block;"}
-      - interactions = filtered_interactions.sort_by { |i| -i.sources.size - i.publications.size }
+      - interactions = filtered_interactions.sort_by { |i| -i.sources.size - i.publications.size }.map{|i| InteractionPresenter.new(i)}
       - if interactions.count > 0
         %table{class: "search_panel table table-condensed table-striped", style: "width: 100%; margin-top: -20px;"}
           %tr
@@ -40,7 +40,6 @@
               Score
           %tbody
           - interactions.each do |interaction|
-            - interaction = InteractionPresenter.new(interaction)
             %tr{onclick: "location.href='/interactions/#{interaction.id}';"}
               %td
                 - if @search_mode == "genes"
@@ -50,13 +49,13 @@
                   %a{href: "/genes/#{interaction.gene.name}"}
                     = interaction.gene.name
               %td
-                = interaction.na_or_types
+                = interaction.na_or_types.join(", ")
               %td
                 - source_count = interaction.sources.size
                 = interaction.sources.map{|source| TrustLevelPresenter.source_link_green(@view_context, source)}.join(' ').html_safe
               %td
                 - if (pub_count = interaction.publications.size) > 0
-                  = interaction.publications.map{|pub| pubmed_link_to(pub.pmid)}.join(" ").html_safe
+                  = interaction.publications.map{|pub| pubmed_link_blue(pub.pmid)}.join(" ").html_safe
                 - else
                   %i
                     None found
@@ -81,4 +80,8 @@
   tr:hover td{
     background-color:rgba(220, 220, 220, 1);
     cursor: pointer;
+  }
+  td .label {
+    display: inline-block;
+    margin-bottom: 3px;
   }
